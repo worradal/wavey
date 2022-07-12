@@ -1,7 +1,9 @@
 import csv
+from __future__ import annotations
 from typing import Tuple
 
 import numpy as np
+from scipy.fft import fft, ifft
 import pandas as pd
 
 
@@ -45,4 +47,12 @@ class Data:
 
         data_df = pd.DataFrame(data).dropna()
         return data_df['x'].values, data_df['y'].values
+    
+    @staticmethod
+    def fourier_transform(spectrum: Data) -> np.ndarray:
+        return fft(spectrum.X)
+    
+    @staticmethod
+    def inverse_fourier_transform(spectrum: Data) -> np.ndarray:
+        return ifft(spectrum.X)
 
