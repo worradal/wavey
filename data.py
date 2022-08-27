@@ -1,22 +1,21 @@
+from __future__ import annotations
 from copy import deepcopy
 import csv
-from distutils.ccompiler import gen_lib_options
 from glob import glob
 from os.path import join
-from __future__ import annotations
-from typing import Tuple, Optional
+from typing import Tuple
 
 import numpy as np
 from scipy.fft import fft, ifft
 from tqdm.auto import tqdm
 import pandas as pd
 
-from .exceptions import DataError
+from exceptions import DataError
 
 class Data:
-    def __init__(self, in_dir: str, ftype: str='raman'):
+    def __init__(self, in_dir: str, ftype: str='raman') -> Data:
         self._x, self._y = None, None
-        for fpath in tqdm(glob(join(in_dir, '*.csv'))):
+        for fpath in tqdm(sorted(glob(join(in_dir, '*.csv')))):
             x, y = self._load_data(fpath=fpath, ftype='raman')
             if self._x is None:
                 self._x = x
@@ -25,11 +24,11 @@ class Data:
             if self._y is None:
                 self._y = y
             elif self._y.shape[0] != y.shape[0]:
-                raise DataError('Different y-axis length between files')
+                raise DataError(f'Different y-axis length between files. '
+                                f'Current length {self._y.shape[0]} but got {y.shape[0]} for file {fpath}')
             else:
                 self._y = np.concatenate((self._y, y), axis=-1)
         self._init_data = (deepcopy(self._x), deepcopy(self._y))
-        return self
     
     @property
     def x(self):
@@ -74,27 +73,26 @@ class Data:
             raise NotImplementedError(f'{ftype} ftype not supported')
 
         data_df = pd.DataFrame(data).dropna()
-        return data_df['x'].values.reshape((-1, 1)), data_df['y'].values
+        return data_df['x'].values.reshape((-1, 1)), data_df['y'].values.reshape((-1, 1))
     
 
     def fourier_transform(self):
-        for row in range(self._x.shape[0]):
-            self._x[row] = fft(self._x[row])
+        for row in range(self._y.shape[0]):
+            self._y[row] = fft(self._y[row])
         return self
     
     def weight(self, fpath):
-        weights_df = pd.read_csv(fpath).iloc[0]
-        n_time_samples = weights_df.shape[1]
-        if n_time_samples != self._y.shape[-1]:
-            raise DataError(f'Number of wights {n_time_samples} does not match number of y-samples {self._y.shape[-1]}')
-        weights = weights_df.to_numpy().reshape(n_time_samples, -1)  # (n_time_samples, 1)
-        for w_id, w in enumerate(weights):
-            self._y[:, w_id] *=  w
+        weights_df = pd.read_csv(fpath)
+        all_weights = weights_df['weights'].values
+        if len(all_weights) != self._y.shape[1]:
+            raise DataError(f'Number of wights {len(weights_df)} does not match length of y-samples along time axis {self._y.shape[1]}')
+        for w_id, w in enumerate(all_weights):
+            self._y[: w_id] *=  w
         return self
 
     def inverse_fourier_transform(self):
-        for row in range(self._x.shape[0]):
-            self._x[row] = ifft(self._x[row])
+        for row in range(self._y.shape[0]):
+            self._y[row] = ifft(self._y[row])
         return self
     
     def save_to(self, fpath):
