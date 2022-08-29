@@ -9,8 +9,9 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('spectrum_dir', help='Path of directory containing all spectra files')
     parser.add_argument('-wf', '--weight_file', required=False, help='Path to weight file')
+    parser.add_argument('-nt', '--num_time', type=int,required=True, help='Number of time runs per run')
     args = parser.parse_args()
-    spectral_data = Data(in_dir=args.spectrum_dir)
+    spectral_data = Data(in_dir=args.spectrum_dir, num_time_points=args.num_time)
 
     for time_id in range(spectral_data.y.shape[-1]):
         plt.plot(spectral_data.x, spectral_data.y[:, time_id])

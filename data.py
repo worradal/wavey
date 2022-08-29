@@ -13,21 +13,40 @@ import pandas as pd
 from exceptions import DataError
 
 class Data:
-    def __init__(self, in_dir: str, ftype: str='raman') -> Data:
+    def __init__(self, in_dir: str, num_time_points: int, ftype: str='raman') -> Data:
+        self.num_time_points = num_time_points
+        all_files = sorted(glob(join(in_dir, '*.csv')))
+        num_repeats = len(all_files) // num_time_points
         self._x, self._y = None, None
-        for fpath in tqdm(sorted(glob(join(in_dir, '*.csv')))):
+        full_y = None
+        time_point = 0
+        for fpath in tqdm(all_files):
             x, y = self._load_data(fpath=fpath, ftype='raman')
-            if self._x is None:
-                self._x = x
-            elif self._x.shape != x.shape:
-                raise DataError('Different x-axis size between files')
-            if self._y is None:
-                self._y = y
-            elif self._y.shape[0] != y.shape[0]:
-                raise DataError(f'Different y-axis length between files. '
-                                f'Current length {self._y.shape[0]} but got {y.shape[0]} for file {fpath}')
+
+            if time_point == 0 or time_point == num_time_points:
+                full_y = y
+                if self._x is None:
+                    self._x = x
+                time_point = 0
+            
             else:
-                self._y = np.concatenate((self._y, y), axis=-1)
+                if self._x.shape != x.shape:
+                    raise DataError('Different x-axis size between files')
+                if full_y.shape[0] != y.shape[0]:
+                    raise DataError(f'Different y-axis length between files. '
+                                    f'Current length {self.full_y.shape[0]} but got {y.shape[0]} for file {fpath}')
+                full_y = np.concatenate((full_y, y), axis=-1)
+            
+            if full_y.shape[-1] == num_time_points:
+                if self._y is None:
+                    self._y = full_y
+                else:
+                    self._y += full_y
+                full_y = None
+
+            time_point += 1
+        
+        self._y /= num_repeats
         self._init_data = (deepcopy(self._x), deepcopy(self._y))
     
     @property
