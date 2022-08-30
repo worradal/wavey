@@ -32,7 +32,6 @@ if __name__ == '__main__':
         plt.show()
     
     spectral_data.inverse_fourier_transform()
-    spectral_data.weight(fpath='/Users/himaghnabhattacharjee/Documents/Research/MES/example_weights.csv')
     for time_id in range(spectral_data.y.shape[-1]):
         plt.plot(spectral_data.x, spectral_data.y[:, time_id])
         plt.title(f'Time id after FT and weighting and r-FFT {time_id}')
