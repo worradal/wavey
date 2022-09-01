@@ -17,7 +17,7 @@ if __name__ == '__main__':
     weight_file = configs.get('weight_file')
     num_time_points = int(configs.get('number_of_time_points'))
     out_dir = configs['out_dir']
-    makedirs(out_dir)
+    makedirs(out_dir, exist_ok=True)
     
     original_data_fpath = join(out_dir, 'original_data.csv')
     transformed_data_fpath = join(out_dir, 'transformed_data.csv')
