@@ -115,7 +115,7 @@ class Data:
         return self
     
     def save_to(self, fpath):
-        df = pd.DataFrame(np.concatenate(self._x, self._y), axis=-1)
+        df = pd.DataFrame(np.concatenate((self._x, self._y), axis=-1))
         print('Writing to ', fpath)
         df.to_csv(fpath)
 
