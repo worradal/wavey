@@ -13,28 +13,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
     spectral_data = Data(in_dir=args.spectrum_dir, num_time_points=args.num_time)
 
-    for time_id in range(spectral_data.y.shape[-1]):
-        plt.plot(spectral_data.x, spectral_data.y[:, time_id])
-        plt.title(f'Time id {time_id}')
+    for shift in range(spectral_data.y.shape[0]):
+        plt.plot(list(range(len(spectral_data.y[shift, :]))), spectral_data.y[shift, :])
+        plt.title(f'shift id {shift}')
         plt.show()
     
     
     spectral_data.fourier_transform()
-    for time_id in range(spectral_data.y.shape[-1]):
-        plt.plot(spectral_data.x, spectral_data.y[:, time_id], c='red')
-        plt.title(f'Time id after FT {time_id}')
+    for shift in range(spectral_data.y.shape[0]):
+        plt.plot(list(range(len(spectral_data.y[shift, :]))), spectral_data.y[shift, :])
+        plt.title(f'after FT shift id {shift}')
         plt.show()
     
     spectral_data.weight(fpath='/Users/himaghnabhattacharjee/Documents/Research/MES/example_weights.csv')
-    for time_id in range(spectral_data.y.shape[-1]):
-        plt.plot(spectral_data.x, spectral_data.y[:, time_id], c='green')
-        plt.title(f'Time id after FT and weighting {time_id}')
+    for shift in range(spectral_data.y.shape[0]):
+        plt.plot(list(range(len(spectral_data.y[shift, :]))), spectral_data.y[shift, :])
+        plt.title(f'after FT and weight shift id {shift}')
         plt.show()
     
     spectral_data.inverse_fourier_transform()
-    for time_id in range(spectral_data.y.shape[-1]):
-        plt.plot(spectral_data.x, spectral_data.y[:, time_id])
-        plt.title(f'Time id after FT and weighting and r-FFT {time_id}')
+    for shift in range(spectral_data.y.shape[0]):
+        plt.plot(list(range(len(spectral_data.y[shift, :]))), spectral_data.y[shift, :])
+        plt.title(f'after FT shift and r-FFT id {shift}')
         plt.show()
 
 

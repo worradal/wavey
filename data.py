@@ -104,9 +104,9 @@ class Data:
         weights_df = pd.read_csv(fpath)
         all_weights = weights_df['weights'].values
         if len(all_weights) != self._y.shape[1]:
-            raise DataError(f'Number of wights {len(weights_df)} does not match length of y-samples along time axis {self._y.shape[1]}')
+            raise DataError(f'Number of weights {len(weights_df)} does not match length of y-samples along time axis {self._y.shape[1]}')
         for w_id, w in enumerate(all_weights):
-            self._y[: w_id] *=  w
+            self._y[:, w_id] *=  w
         return self
 
     def inverse_fourier_transform(self):
