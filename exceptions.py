@@ -1,5 +1,9 @@
 
 
 class DataError(RuntimeError):
-    """ Raise errorr related to loading data """
+    """ Raise error related to loading data. """
+    pass
+
+class NotConvergedError(RuntimeError):
+    """ Raise error related to convergence. """
     pass
