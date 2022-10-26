@@ -133,18 +133,16 @@ class Data:
     
     def baseline_correct(self, method: str, configs: dict) -> None:
         if method.lower() == 'arpls':
-            lambda_ = configs['lambda_']
+            lambda_ = configs.pop('lambda_')
             baseline_corrector = ARPLS(lambda_=lambda_)
+
         else:
             raise ValueError(f'method {method} not recognized')
 
-        stop_ratio = configs['stop_ratio']
-        max_iters = configs['max_iters']
 
         for time_sample in range(self.y.shape[-1]):
             self._baseline[:, time_sample] = baseline_corrector.get_baseline(
                 y=self._y[:, time_sample], 
-                stop_ratio=stop_ratio, 
-                max_iters=max_iters)
+                **configs)
         self._y -= self._baseline
 
