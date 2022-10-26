@@ -10,6 +10,7 @@ from scipy.fft import fft, ifft
 from tqdm.auto import tqdm
 import pandas as pd
 
+from baseline_correction import ARPLS
 from exceptions import DataError
 
 class Data:
@@ -57,6 +58,7 @@ class Data:
         
         self._y /= num_repeats
         self._init_data = (deepcopy(self._x), deepcopy(self._y))
+        self._baseline = np.zeros_like(self._y)
     
     @property
     def x(self):
@@ -128,4 +130,21 @@ class Data:
         df = pd.DataFrame(np.concatenate((self._x, self._y), axis=-1))
         print('Writing to ', fpath)
         df.to_csv(fpath)
+    
+    def baseline_correct(self, method: str, configs: dict) -> None:
+        if method.lower() == 'arpls':
+            lambda_ = configs['lambda_']
+            baseline_corrector = ARPLS(lambda_=lambda_)
+        else:
+            raise ValueError(f'method {method} not recognized')
+
+        stop_ratio = configs['stop_ratio']
+        max_iters = configs['max_iters']
+
+        for time_sample in range(self.y.shape[-1]):
+            self._baseline[:, time_sample] = baseline_corrector.get_baseline(
+                y=self._y[:, time_sample], 
+                stop_ratio=stop_ratio, 
+                max_iters=max_iters)
+        self._y -= self._baseline
 
