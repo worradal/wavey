@@ -13,7 +13,7 @@ import pandas as pd
 from exceptions import DataError
 
 class Data:
-    def __init__(self, in_dir: str, num_time_points: int, ftype: str='raman') -> Data:
+    def __init__(self, in_dir: str, num_time_points: int) -> Data:
         self.num_time_points = num_time_points
         all_files = sorted(glob(join(in_dir, '*.csv')))
         num_repeats = len(all_files) // num_time_points
