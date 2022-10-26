@@ -4,7 +4,6 @@ from numpy.linalg import norm
 from scipy import sparse
 from scipy.sparse import linalg
 
-from .exceptions import NotConvergedError
 
 class ARPLS:
     """Implements the Asymmetrically reweighted penalized least square method from [1]
@@ -41,7 +40,8 @@ class ARPLS:
             
             num_iters += 1
             if num_iters > max_iters:
-                raise NotConvergedError('Maximum number of iterations exceeded')
+                print('Maximum number of iterations exceeded')
+                break
 
         if full_output:
             info = {'num_iters': num_iters, 'final_ratio': current_ratio}
