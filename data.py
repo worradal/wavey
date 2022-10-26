@@ -13,7 +13,16 @@ import pandas as pd
 from exceptions import DataError
 
 class Data:
-    def __init__(self, in_dir: str, num_time_points: int) -> Data:
+    def __init__(self, in_dir: str, num_time_points: int, ftype: str='raman') -> Data:
+        """
+        Data structure to hold the spectrum. The data is stored in the form of x containing 
+        wavenumbers or raman shifts of shape (num_sampling_points, 1) and y containing the 
+        responses of shape (num_sampling_points, num_time_points). 
+        
+        Note:
+            The responses are averaged across a third axis of length num_repitions calculated as:
+            total_num_files // num_time_points.
+        """
         self.num_time_points = num_time_points
         all_files = sorted(glob(join(in_dir, '*.csv')))
         num_repeats = len(all_files) // num_time_points
@@ -21,7 +30,7 @@ class Data:
         full_y = None
         time_point = 0
         for fpath in tqdm(all_files):
-            x, y = self._load_data(fpath=fpath, ftype='raman')
+            x, y = self._load_data(fpath=fpath, ftype=ftype)
 
             if time_point == 0 or time_point == num_time_points:
                 full_y = y
@@ -58,6 +67,7 @@ class Data:
         return self._y
 
     def _load_data(self, fpath: str, ftype: str) -> Tuple[np.ndarray, np.ndarray]:
+        """Loads data from the file."""
         if ftype.lower() == 'raman':
             x_name = 'Raman Shift'
             x_col = -1
