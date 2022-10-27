@@ -16,6 +16,8 @@ if __name__ == '__main__':
     spectrum_dir = configs['spectrum_dir']
     weight_file = configs.get('weight_file')
     num_time_points = int(configs.get('number_of_time_points'))
+    baseline_correction_method = configs.get('baseline_correction_method', None)
+    baseline_correction_configs = configs.get('baseline_correction_configs')
     out_dir = configs['out_dir']
     makedirs(out_dir, exist_ok=True)
     
@@ -25,6 +27,15 @@ if __name__ == '__main__':
     spectral_data = Data(in_dir=spectrum_dir, num_time_points=num_time_points)
     print('Saving original file to ', original_data_fpath)
     spectral_data.save_to(original_data_fpath)
+
+    if baseline_correction_method is not None:
+        spectral_data.baseline_correct(
+            method=baseline_correction_method, 
+            configs=baseline_correction_configs)
+        baseline_corrected_data_fpath = join(out_dir, 'original_data.csv')
+        print('Saving transformed file to ', baseline_corrected_data_fpath)
+        spectral_data.save_to(baseline_corrected_data_fpath)
+
     spectral_data.fourier_transform()
     if weight_file is not None:
         spectral_data.weight(fpath=weight_file)
