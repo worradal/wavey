@@ -25,21 +25,21 @@ if __name__ == '__main__':
     transformed_data_fpath = join(out_dir, 'transformed_data.csv')
 
     spectral_data = Data(in_dir=spectrum_dir, num_time_points=num_time_points)
-    print('Saving original file to ', original_data_fpath)
+    print('Saving original data to ', original_data_fpath)
     spectral_data.save_to(original_data_fpath)
 
     if baseline_correction_method is not None:
         spectral_data.baseline_correct(
             method=baseline_correction_method, 
             configs=baseline_correction_configs)
-        baseline_corrected_data_fpath = join(out_dir, 'original_data.csv')
-        print('Saving transformed file to ', baseline_corrected_data_fpath)
+        baseline_corrected_data_fpath = join(out_dir, 'baseline_corrected_data.csv')
+        print('Saving baseline corrected data to ', baseline_corrected_data_fpath)
         spectral_data.save_to(baseline_corrected_data_fpath)
 
     spectral_data.fourier_transform()
     if weight_file is not None:
         spectral_data.weight(fpath=weight_file)
     spectral_data.inverse_fourier_transform()
-    print('Saving transformed file to ', transformed_data_fpath)
+    print('Saving transformed data to ', transformed_data_fpath)
     spectral_data.save_to(transformed_data_fpath)
 
