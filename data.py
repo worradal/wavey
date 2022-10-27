@@ -135,7 +135,6 @@ class Data:
         if method.lower() == 'arpls':
             lambda_ = configs.pop('lambda_')
             baseline_corrector = ARPLS(lambda_=lambda_)
-
         else:
             raise ValueError(f'method {method} not recognized')
 
