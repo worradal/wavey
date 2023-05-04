@@ -52,7 +52,7 @@ class Data:
         self._x, self._y = None, None
         full_y = None
         time_point = 0
-        for fpath in all_files_sliced: #tqdm(all_files_sliced):
+        for fpath in all_files_sliced: # tqdm(all_files_sliced): # tqdm is a progress bar not suitable for GUI implementation
             x, y = self._load_data(fpath=fpath, ftype=ftype)
 
             if time_point == 0 or time_point == num_time_points:
@@ -136,9 +136,7 @@ class Data:
                         x_col = row.index(x_name)
                         y_col = row.index(y_name)
         elif ftype.lower() == self.IR:
-            x_name = 'Wavenumbers'
             x_col = 0
-            y_name = 'Absorbance'
             y_col = 1
             useful_data_start = True
             data = {'x': [], 'y': []}
@@ -159,8 +157,6 @@ class Data:
                         except ValueError as e:
                             x_val = np.nan
                         data['x'].append(x_val)
-
-                    # if x_name in row:
                         
         elif ftype.lower() == self.UV_VIS:
             data = {'x': [], 'y': []}
@@ -175,13 +171,11 @@ class Data:
                             try:
                                 y_val = float(split_line[-1])
                             except ValueError as e:
-                                # print(type(e))
                                 y_val = np.nan
                             data['y'].append(y_val)
                             try:
                                 x_val = float(split_line[0])
                             except ValueError as e:
-                                # print(type(e))
                                 x_val = np.nan
                             data['x'].append(x_val)
         else:
@@ -233,7 +227,6 @@ class Data:
             baseline_corrector = ARPLS(lambda_=lambda_)
         else:
             raise ValueError(f'method {method} not recognized')
-
 
         for time_sample in range(self.y.shape[-1]):
             self._baseline[:, time_sample] = baseline_corrector.get_baseline(
