@@ -1,0 +1,13 @@
+spectrum_dir: # contains full path of folder / directory with the files
+weight_file: # contains path to the CSV file with weights. This is optional.
+number_of_time_points: 60 # number of time points collected.
+out_dir: # output directory where the output CSV files will be created. Cannot be the same as spectrum_dir.
+baseline_correction_method: # baseline correction method to use
+baseline_correction_configs:  {
+        'lambda':  100000,
+        'stop_ratio': .000001, 
+        'max_iters': 10000
+    } # baseline cofigs
+start_frame: # when slicing data, the first data point to use
+end_frame: # when slicing data, the last data point to use (-1 represents the last possible frame)
+spectra_type: # available options 'raman', 'uv' 

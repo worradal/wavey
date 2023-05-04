@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: wavey
+Version: 0.0.1
+Summary: A small example package
+Author-email: Alfred Worrad <worrada@udel.com>
+Project-URL: Homepage, https://github.com/worradal/wavey
+Project-URL: Bug Tracker, https://github.com/worradal/wavey/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: LICENSE.old
+
+# wavey
+Wavey is a package to manipulate time varying spectroscopic data.
+
+## Run wavey
+`python wavey.py config.yml`
+
+## Requirements
+1. [numpy](https://numpy.org/)
+2. [scipy](https://scipy.org/)
+3. [tqdm](https://github.com/tqdm/tqdm)
+4. [pyyaml](https://pyyaml.org/)
+5. [pandas](https://pandas.pydata.org/)
+6. [natsort](https://github.com/SethMMorton/natsort)
+
