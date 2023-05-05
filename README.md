@@ -5,8 +5,17 @@ Wavey is a package to manipulate time varying spectroscopic data.
 `python wavey.py config.yml`
 
 ## To run UI
-`cd src`
-`python ui.py`
+
+- ##### With python
+
+    `cd src`
+    `python ui.py`
+
+- ##### With install media
+    run the installer named wavey_#_#_#.exe 
+    open the installed directory wavey and run the ui_#_#_#.exe to open the UI
+
+
 
 ## UI usage
 1. Select a folder containing the data files
